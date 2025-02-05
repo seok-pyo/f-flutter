@@ -46,79 +46,76 @@ class _DetailscreenState extends State<Detailscreen> {
           style: TextStyle(fontSize: 35),
         ),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 50,
-          ),
-          Center(
-            child: Hero(
-              tag: widget.id,
-              child: Container(
-                width: 250,
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.3),
-                        offset: Offset(15, 15),
-                        blurRadius: 10)
-                  ],
-                ),
-                child: Image.network(
-                  widget.thumb,
-                  headers: const {
-                    'Referer': 'https://comic.naver.com',
-                  },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            Center(
+              child: Hero(
+                tag: widget.id,
+                child: Container(
+                  width: 250,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.3),
+                          offset: Offset(15, 15),
+                          blurRadius: 10)
+                    ],
+                  ),
+                  child: Image.network(
+                    widget.thumb,
+                    headers: const {
+                      'Referer': 'https://comic.naver.com',
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              children: [
-                FutureBuilder(
-                  future: webtoon,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(
-                        snapshot.data!.about,
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      );
-                    } else {
-                      return Text('...');
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                FutureBuilder(
-                  future: episode,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.separated(
-                          itemBuilder: (context, index) {
-                            var episode = snapshot.data![index];
-                            print(episode);
-                            return Text(episode.title);
-                          },
-                          separatorBuilder: (context, index) => SizedBox(
-                                height: 15,
-                              ),
-                          itemCount: snapshot.data!.length);
-                    }
-                    return Container();
-                  },
-                ),
-              ],
+            FutureBuilder(
+              future: webtoon,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    snapshot.data!.about,
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  );
+                } else {
+                  return Text('...');
+                }
+              },
             ),
-          ),
-        ],
+            SizedBox(
+              height: 25,
+            ),
+            FutureBuilder(
+              future: episode,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        var episode = snapshot.data![index];
+                        print(episode.title);
+                        return Text(episode.title);
+                      },
+                      separatorBuilder: (context, index) => SizedBox(
+                            height: 15,
+                          ),
+                      itemCount: snapshot.data!.length);
+                }
+                return Container();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
